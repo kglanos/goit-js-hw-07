@@ -23,14 +23,24 @@ function createItemsMarkup(item) {
 }
 const onContainerClick = (e) => {
     e.preventDefault();
+    if (e.target.nodeName !== "IMG") {
+        return;
+    }
 
-    if (e.target.classList.contains("gallery")) return;
     const source = e.target.dataset.source;
-    
     const instance = basicLightbox.create(`
     <img src="${source}"width="800" height="600">`);
-
     instance.show();
+
+    document.addEventListener("keydown", onEscape);
+
+    function onEscape(e) {
+        if (e.code === "Escape") {
+            instance.close();
+            document.removeEventListener("keydown", onEscape);
+        }
+    }
+
 };
 
 galleryContainerElement.addEventListener("click", onContainerClick);
